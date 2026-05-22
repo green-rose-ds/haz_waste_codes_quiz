@@ -12,15 +12,17 @@ A quiz to match up the descriptions of Hazardous Waste codes to their descriptio
 **Languages**
 - Python
 - Github flavoured Markdown
+  
 **Libraries**
 - Tkinter
 - csv
 - Pytest
+  
 **Apps/Tools**
-  - Figma
-  - io.draw
-  - VS Codes
-  - Github
+- Figma
+- io.draw
+- VS Codes
+- Github
 
 ### Code Design
 
