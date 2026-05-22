@@ -14,5 +14,3 @@ quiz_questions = { "HP_1 Explosive" : "Waste that can cause dangerous chemical r
                   "HP_14 Ecotoxic" : "Waste that poses risks to the environment, potentially affecting ecosystems.",
                   "HP_15" : "Waste that could show any of the hazardous properties listed above, even if not originally present.",
                   "HP_POP" : "A waste containing persistent organic pollutants is hazardous if the concentration of the POP is above the concentration limit assigned to it in Annex IV of the Persistent Organic Pollutants Regulation."}
-
-print(quiz_questions)
