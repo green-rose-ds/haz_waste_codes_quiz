@@ -17,10 +17,10 @@ A quiz to match up the descriptions of Hazardous Waste codes to their descriptio
 - csv
 - Pytest
 **Apps/Tools**
-  - Figma
-  - io.draw
-  - VS Codes
-  - Github
+- Figma
+- io.draw
+- VS Codes
+- Github
 
 ### Code Design
 
