@@ -13,7 +13,10 @@ A quiz to match up the descriptions of Hazardous Waste codes to their descriptio
 | ID  | Requirement Specification                                                                                                                       |
 |-----|-------------------------------------------------------------------------------------------------------------------------------------------------|
 | F1  | The GUI will display a name entry screen before the quiz begins                                                                                 |
-| F2  | The app logic must validate the player's name, against the below criteria and display an appropriate error message if invalid                   |
+| F2  | The app logic must validate the player's name, against the below criteria and display an appropriate error message if invalid:                  |
+| F2.1|  - Name cannot be blank                                                                                                                         |
+| F2.2|  - Name is between 2 and 20 characters                                                                                                          | 
+| F2.3|  - Name is made up of correct characters (letters and valid punctuation) only                                                                   |
 | F3  | The GUI will display the predefined 16 Hazardous Waste codes, and 16 corresponding descriptions, in two separate columns                        |
 | F4  | The app logic must shuffle the descriptions into a random order each time the quiz loads                                                        |
 | F5  | The GUI will allow the player to select one Hazardous Waste code in the left column, and one description in the right column, to create a match |
