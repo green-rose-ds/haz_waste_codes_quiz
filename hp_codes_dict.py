@@ -1,0 +1,18 @@
+quiz_questions = { "HP_1 Explosive" : "Waste that can cause dangerous chemical reactions, producing gas that can damage surroundings (e.g., pyrotechnic or self-reactive waste).",
+                  "HP_2 Oxidizing" : "Waste that can provide oxygen, causing or contributing to the combustion of other materials.",
+                  "HP_3	Flammable" : "Waste that is easily ignited, including liquids with a flashpoint below 60°C, flammable gases, or solid waste that ignites through friction.",
+                  "HP_4	Irritant" :	"Waste that can cause skin irritation or damage to the eyes upon contact.",
+                  "HP_5	Specific Target Organ Toxicity/Aspiration Toxicity" : "Waste that can harm specific organs through repeated exposure or cause toxic effects when inhaled or absorbed.",
+                  "HP_6	Acute Toxicity" : "Waste that can cause severe health effects when ingested, inhaled, or through skin contact.",
+                  "HP_7	Carcinogenic" : "Waste that can cause cancer or increase the risk of cancer.",
+                  "HP_8	Corrosive" : "Waste that can cause severe skin corrosion upon contact.",
+                  "HP_9	Infectious" : "Waste containing microorganisms or toxins that can cause disease in humans or animals.",
+                  "HP_10 Toxic for Reproduction" : "Waste that can negatively affect reproductive health or harm offspring development.",
+                  "HP_11 Mutagenic" : "Waste that can cause permanent changes in genetic material (mutations).",
+                  "HP_12 Produces toxic gases in contact with water, air or acid" : "Waste that releases toxic gases when in contact with water or acids.",
+                  "HP_13 Sensitising" : "Waste that contains substances that can cause allergic reactions, affecting the skin or respiratory system.",
+                  "HP_14 Ecotoxic" : "Waste that poses risks to the environment, potentially affecting ecosystems.",
+                  "HP_15" : "Waste that could show any of the hazardous properties listed above, even if not originally present.",
+                  "HP_POP" : "A waste containing persistent organic pollutants is hazardous if the concentration of the POP is above the concentration limit assigned to it in Annex IV of the Persistent Organic Pollutants Regulation."}
+
+print(quiz_questions)
