@@ -21,6 +21,6 @@ quiz_questions = { "HP_1 Explosive" : "Cause dangerous chemical reactions that c
                   "HP_13 Sensitising" : "Causes allergic reactions, affecting the skin or respiratory system",
                   "HP_14 Ecotoxic" : "Poses risks to the environment, potentially affecting ecosystems"}
 
-tutorial_questions = {"HP_15" : "Show any of the hazardous properties listed",
-                      "HP_POP" : "Containing persistent organic pollutants above the concentration limit"}
+tutorial_questions = {"HP_15" : "May show any of the hazardous properties, even if not initially present",
+                      "HP_POP" : "Contains persistent organic pollutants above the concentration limit"}
                   
