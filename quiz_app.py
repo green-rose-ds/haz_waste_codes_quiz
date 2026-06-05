@@ -27,7 +27,7 @@ quiz = QuizLogic(quiz_questions)
 welcome_frame = tk.Frame(root, bg='#002B5A', padx=60, pady=30, width=800)
 welcome_frame.pack(expand=True, anchor='center')
 
-# Title
+# Welcome title 
 title_label = tk.Label(
     welcome_frame,
     text="Welcome to the Hazardous Property (HP) Codes Quiz!",
@@ -47,7 +47,7 @@ warning_label.image = warning_image
 warning_label.grid(row=1, column=0, columnspan=2, pady=(0, 15), sticky="ew")
 warning_label.configure(anchor="center")
 
-# Quiz Opening Description
+# Quiz opening description
 description_label = tk.Label(
     welcome_frame,
     text="In this quiz, you will match HP codes for hazardous classified waste to their corresponding definition.\n"
@@ -105,7 +105,7 @@ def on_press(e):
 
 def on_lets_go():
     """
-    Handles the Lets Go button click on the welcome screen.
+    Handles the Let's Go button click on the welcome screen.
     Validates the player name entry using QuizLogic. 
     Displays an error messagebox if the entered name is triggers validate_name from quiz_logic, or switches to the tutorial screen if the name is accepted.
     """
@@ -113,19 +113,18 @@ def on_lets_go():
     if not is_valid:
         messagebox.showerror("Invalid Name", result)
     else:
-        # switch to tutorial frame here when built
-        print(f"Name accepted: {quiz.player_name}")
+        show_tutorial()
 
 lets_go_button = tk.Button(
     welcome_frame,
-    text="Lets Go! 🚀",
-    font=('Arial', 20, 'bold'),
+    text="Let's Go! 🚀",
+    font=('Arial', 16, 'bold'),
     bg='#FFE500',
     fg='#000000',
     activebackground="#ffffff",
     relief='groove',
-    padx=20,
-    pady=8,
+    padx=8,
+    pady=3,
     cursor='hand2',
     command=on_lets_go)
 lets_go_button.grid(row=5, column=0, columnspan=2, pady=(20, 0))
@@ -137,6 +136,171 @@ lets_go_button.bind('<ButtonPress-1>', on_press)
 # ============================================================
 # TUTORIAL SCREEN
 # ============================================================
+
+tutorial_frame = tk.Frame(root, bg='#002B5A', padx=60, pady=30, width=800)
+
+def show_tutorial():
+    """
+    Switches from the welcome screen to the tutorial screen.
+    Hides the welcome screen, updates the player name in the title, and displays the tutorial screen.
+    """
+    welcome_frame.pack_forget()
+
+    # Update title with the validated player's name
+    tutorial_title.config(text=f"Hello {quiz.player_name} 👋, after a quick tutorial you're ready to go!")
+    tutorial_frame.pack(expand=True, fill='both', anchor='center')
+
+# Tutorial title
+tutorial_title = tk.Label(
+    tutorial_frame,
+    text="",
+    font=('Arial', 22, 'bold'),
+    fg='#ffffff',
+    bg='#002B5A',
+    wraplength=800,
+    justify='left')
+tutorial_title.grid(row=0, column=0, columnspan=3, sticky='w', pady=(0, 8))
+
+# Tutorial instructions
+tutorial_instruction = tk.Label(
+    tutorial_frame,
+    text="I've connected the last 2 HP codes as an example for you below! On the next screen you will be shown 1-14 of the HP codes on the left, with the randomly sorted definitions on the right.\n\n"
+         "You will first click on the HP code on the left, and then select the definition you think matches it for a line to be drawn between them. "
+         "Once you have matched all of the HP codes to a description you will be able to submit them and see your score.\n\n"
+         "If you need to brush up on your classifications knowledge first, please visit:",
+    font=('Arial', 14),
+    fg='#ffffff',
+    bg='#002B5A',
+    wraplength=800,
+    justify='left')
+tutorial_instruction.grid(row=1, column=0, columnspan=3, sticky='w', pady=(0, 2))
+
+# Link to external calssification guidance
+guidance_link = tk.Label(
+    tutorial_frame,
+    text="GOV.UK Waste Classification Technical Guidance",
+    font=('Arial', 14, 'underline'),
+    fg='#FFE500',
+    bg='#002B5A',
+    cursor='hand2')
+guidance_link.grid(row=2, column=0, columnspan=3, sticky='w', pady=(0, 15))
+
+guidance_link.bind('<Button-1>', lambda e: webbrowser.open(
+    "https://www.gov.uk/government/publications/classify-different-types-of-waste"))
+guidance_link.bind('<Enter>', lambda e: guidance_link.config(fg='#ffffff'))
+guidance_link.bind('<Leave>', lambda e: guidance_link.config(fg='#FFE500'))
+
+# Column headers
+tk.Label(
+    tutorial_frame,
+    text="HP Code",
+    font=('Arial', 13, 'bold'),
+    fg='#FFE500',
+    bg='#002B5A').grid(row=3, column=0, sticky='w', pady=(0, 5))
+
+tk.Label(
+    tutorial_frame,
+    text="Definition",
+    font=('Arial', 13, 'bold'),
+    fg='#FFE500',
+    bg='#002B5A').grid(row=3, column=2, sticky='w', pady=(0, 5))
+
+# Example HP code buttons
+for i, (item, answer) in enumerate(tutorial_questions.items()):
+
+    # HP code label
+    hp_frame = tk.Frame(tutorial_frame, bg='#FFE500')
+    hp_frame.grid(row=4 + i, column=0, sticky='w', pady=5)
+    tk.Label(
+        hp_frame,
+        text=item,
+        font=('Arial', 13, 'bold'),
+        bg='#ffffff',
+        fg='#002B5A',
+        width=22,
+        pady=8).pack(pady=(0, 3))
+
+    # Line to show connected HP code and definition
+    tk.Label(
+        tutorial_frame,
+        text="──────────",
+        font=('Arial', 12),
+        fg='#FFE500',
+        bg='#002B5A').grid(row=4 + i, column=1, padx=10)
+
+    # Example definition buttons
+    tk.Label(
+        tutorial_frame,
+        text=answer,
+        font=('Arial', 12),
+        bg='#ffffff',
+        fg='#002B5A',
+        width=45,
+        pady=8,
+        wraplength=400,
+        justify='left').grid(row=4 + i, column=2, sticky='w', pady=5)
+
+# Buttons on the bottom row
+bottom_row = tk.Frame(tutorial_frame, bg='#002B5A')
+bottom_row.grid(row=7, column=0, columnspan=3, pady=(20, 0))
+
+# Back to welcome screen button
+back_label = tk.Label(
+    bottom_row,
+    text="← Back to welcome screen",
+    font=('Arial', 16),
+    fg='#FFE500',
+    bg='#002B5A',
+    cursor='hand2')
+back_label.pack(side='left', padx=(0, 30))
+back_label.bind('<Button-1>', lambda e: [
+    tutorial_frame.pack_forget(),
+    welcome_frame.pack(expand=True, anchor='center')])
+
+# Let's Begin button
+def on_begin_hover(e):
+    """
+    Changes the Lets Begin button colour on hover.
+    """
+    lets_begin_button.config(bg='#C7BB13')
+
+def on_begin_leave(e):
+    """
+    Resets the Let's Begin button colour when mouse leaves.
+    """
+    lets_begin_button.config(bg='#FFE500', fg='#000000')
+
+def on_begin_press(e):
+    """
+    Changes the Let's Begin button for pressed state.
+    """
+    lets_begin_button.config(bg='#2F2A02', fg='#ffffff')
+
+def on_lets_begin():
+    """
+    Handles the Let's Begin button click on the tutorial screen.
+    Switches from the tutorial screen to the main quiz screen.
+    """
+    tutorial_frame.pack_forget()
+    print("Moving to quiz screen") #Needs to be updated once next screen built
+
+lets_begin_button = tk.Button(
+    bottom_row,
+    text="Let's Begin! 🚀",
+    font=('Arial', 16, 'bold'),
+    bg='#FFE500',
+    fg='#000000',
+    activebackground='#ffffff',
+    relief='groove',
+    padx=8,
+    pady=3,
+    cursor='hand2',
+    command=on_lets_begin)
+lets_begin_button.pack(side='left')
+
+lets_begin_button.bind('<Enter>', on_begin_hover)
+lets_begin_button.bind('<Leave>', on_begin_leave)
+lets_begin_button.bind('<ButtonPress-1>', on_begin_press)
 
 # ============================================================
 # QUIZ SCREEN
