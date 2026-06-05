@@ -7,7 +7,7 @@ scoring, and submission logic for the QuizLogic class.
 """
 
 def test_smoke():
-     """
+    """
     Smoke test to test pytest is functioning.
     """
     assert 1 + 1 == 2
