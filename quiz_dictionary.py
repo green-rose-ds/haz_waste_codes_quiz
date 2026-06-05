@@ -1,6 +1,14 @@
-quiz_questions = { "HP_1 Explosive" : "Cause dangerous chemical reactions that can damage surroundings (e.g., pyrotechnic)",
+"""
+Quiz data for the Hazardous Property Codes quiz.
+
+Contains two dictionaries:
+- quiz_questions: 14 Hazard Property (HP) codes and their shortened definitions for uses as the main quiz content.
+- tutorial_questions: 2 HP codes used in the tutorial screen to demonstrate how the matching quiz works before the player begins.
+"""
+
+quiz_questions = { "HP_1 Explosive" : "Cause dangerous chemical reactions that can damage surroundings",
                   "HP_2 Oxidizing" : "Provides oxygen, causing or contributing to the combustion of other materials",
-                  "HP_3	Flammable" : "Easily ignites, inc. liquids with a flashpoint below 60°C, flammable gases, or solid waste through friction",
+                  "HP_3	Flammable" : "Easily ignites, inc. liquids with flashpoint below 60°C, flammable gases, or solid waste",
                   "HP_4	Irritant" :	"Causes skin irritation or damage to the eyes upon contact",
                   "HP_5	Organ/Aspiration Toxicity" : "Harm specific organs or cause toxic effects when inhaled or absorbed",
                   "HP_6	Acute Toxicity" : "Causes severe health effects when ingested, inhaled, or through skin contact",
