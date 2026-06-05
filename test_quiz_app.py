@@ -1,11 +1,14 @@
-from quiz_dictionary import quiz_questions
+from quiz_dictionary import quiz_questions, tutorial_questions
 from quiz_logic import validate_name, QuizLogic
 
 def test_smoke():
     assert 1 + 1 == 2
 
 def test_dictionary_items():
-    assert len(quiz_questions) == 16
+    assert len(quiz_questions) == 14
+
+def test_tutorial_items():
+    assert len(tutorial_questions) == 2
 
 def test_name_is_not_blank():
     is_valid, _ = validate_name("")
