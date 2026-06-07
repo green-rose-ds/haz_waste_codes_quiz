@@ -77,17 +77,23 @@ class QuizLogic:
             self.player_name = result
         return is_valid, result
 
-    def prepare_answers(self):
-        """
-        Generates a randomly shuffled list of answers to display in the quiz app.
-        Extracts values from the quiz_questions dictionary and shuffles them randomly so they do not align with their corresponding HP codes in the lefthand column.
+    def prepare_options_for_definition_dropdown(self, item):
+     """
+     Generates a list of 6 answer options for a given definition.
+     Includes the correct answer plus 5 randomly selected wrong answers from the remaining definitions.
 
-        Returns:
-            list: A randomly shuffled list of all answer strings.
-        """
-        self.shuffled_answers = list(self.questions.values())
-        random.shuffle(self.shuffled_answers)
-        return self.shuffled_answers
+     Arguments:
+       - item (str): The HP code to generate options for.
+
+     Returns:
+       - list: A shuffled list of 6 answer strings.
+    """
+     correct_answer = self.questions[item]
+     wrong_answers = [v for k, v in self.questions.items() if k != item]
+     wrong_sample = random.sample(wrong_answers, 5)
+     answer_options = [correct_answer] + wrong_sample
+     random.shuffle(answer_options)
+     return answer_options
 
     def attempt_match(self, item, answer):
         """
@@ -131,14 +137,28 @@ class QuizLogic:
             1 for item, answer in self.matched_pairs.items()
             if self.questions[item] == answer)
 
-    def is_complete(self):
-        """
-        Checks whether all questions have been matched.
+    def is_complete(self, selected_answers):
+     """
+     Checks whether all dropdowns have been answered before submission.
+     Raises a ValueError if any dropdown still shows the default placeholder, indicating the player hasn't made a selection for every HP code.
 
-        Returns:
-            bool: True if the total matched pairs equals the total number of questions otherwise False.
-        """
-        return len(self.matched_pairs) == len(self.questions)
+     Arguments:
+        selected_answers (dict): Dictionary of {item: tk.StringVar} from the quiz screen dropdowns.
+
+     Returns:
+        bool: True if player has selected an answer in all dropdowns.
+
+     Raises:
+        ValueError: If one or more dropdowns still show the default value.
+     """
+     unanswered_dropdowns = [item for item, var in selected_answers.items()
+                  if var.get() == "Select a definition..."]
+     if unanswered_dropdowns:
+        remaining_to_fill = len(unanswered_dropdowns)
+        raise ValueError(
+            f"You still have {remaining_to_fill} unanswered question(s). "
+            f"Please answer all questions before submitting.")
+     return True
 
     def get_results_summary(self):
         """
@@ -149,9 +169,9 @@ class QuizLogic:
         Returns:
             list: A list of dictionaries, one per question, each with the following keys:
                   - item (str): The HP code
-                  - given_answer (str): The answer the player chose
-                  - correct_answer (str): The correct answer
-                  - is_correct (bool): Whether the match was correct
+                  - given_answer (str): The answer the player has chose
+                  - correct_answer (str): The correct definition answer
+                  - is_correct (bool): Whether the players match was correct
         """
         summary = []
         for item, given_answer in self.matched_pairs.items():
