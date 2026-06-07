@@ -1,3 +1,4 @@
+import pytest
 from quiz_dictionary import quiz_questions, tutorial_questions
 from quiz_logic import validate_name, QuizLogic
 
