@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import messagebox, ttk
 from PIL import Image, ImageTk
 from quiz_logic import QuizLogic
 from quiz_dictionary import quiz_questions, tutorial_questions
@@ -13,6 +13,7 @@ Imports Pillow for ImageTk to position and size an image embedded in the GUI.
 """
 
 root = tk.Tk()
+root.option_add('*TCombobox*Listbox.font', ('Arial', 11))
 root.title("Hazardous Property (HP) Codes Quiz")
 root.geometry('900x700')
 root.resizable(False, False)
@@ -247,7 +248,7 @@ bottom_row.grid(row=7, column=0, columnspan=3, pady=(20, 0))
 # Back to welcome screen button
 back_label = tk.Label(
     bottom_row,
-    text="← Back to welcome screen",
+    text="< Back to welcome screen",
     font=('Arial', 16),
     fg='#FFE500',
     bg='#002B5A',
@@ -282,7 +283,7 @@ def on_lets_begin():
     Switches from the tutorial screen to the main quiz screen.
     """
     tutorial_frame.pack_forget()
-    print("Moving to quiz screen") #Needs to be updated once next screen built
+    show_quiz()
 
 lets_begin_button = tk.Button(
     bottom_row,
@@ -305,6 +306,163 @@ lets_begin_button.bind('<ButtonPress-1>', on_begin_press)
 # ============================================================
 # QUIZ SCREEN
 # ============================================================
+
+quiz_frame = tk.Frame(root, bg='#002B5A', padx=40, pady=20, width=800)
+
+#ttk styling for the dropdown boxes
+style = ttk.Style()
+style.theme_use('clam')
+style.configure(
+    'TCombobox',
+    fieldbackground='#ffffff',
+    background='#ffffff',
+    foreground='#002B5A',
+    arrowcolor='#002B5A',
+    selectbackground='#ffffff',
+    selectforeground='#002B5A')
+style.map('TCombobox',
+    fieldbackground=[('readonly', '#ffffff')],
+    foreground=[('readonly', '#002B5A')],
+    selectbackground=[('readonly', '#ffffff')],
+    selectforeground=[('readonly', '#002B5A')])
+
+def show_quiz():
+    """
+    Switches from the tutorial screen to the quiz screen.
+    Hides the tutorial frame and displays the quiz frame with all HP code labels and definition dropdowns.
+    """
+    tutorial_frame.pack_forget()
+    quiz_frame.pack(expand=True, fill='both', anchor='center')
+
+# Column headers
+tk.Label(
+    quiz_frame,
+    text="HP Code",
+    font=('Arial', 14, 'bold'),
+    fg='#ffffff',
+    bg='#002B5A').grid(row=0, column=0, sticky='w', pady=(0, 8))
+
+tk.Label(
+    quiz_frame,
+    text="Definition",
+    font=('Arial', 14, 'bold'),
+    fg='#ffffff',
+    bg='#002B5A').grid(row=0, column=1, sticky='w', padx=(20, 0), pady=(0, 8))
+
+# Dictionary to store dropdown StringVars for each HP code
+selected_answers = {}
+
+# HP code labels and dropdowns
+for i, item in enumerate(quiz_questions.keys()):
+
+    style_name = f'Combo{i}.TCombobox'
+    style.configure(style_name, fieldbackground='#ffffff', foreground='#002B5A')
+    style.map(style_name,
+    fieldbackground=[('readonly', '#ffffff')],
+    foreground=[('readonly', '#002B5A')],
+    selectbackground=[('readonly', '#ffffff')],
+    selectforeground=[('readonly', '#002B5A')])
+
+
+    # HP code labels
+    hp_frame = tk.Frame(quiz_frame, bg="#080202")
+    hp_frame.grid(row=i + 1, column=0, sticky='w', pady=3)
+    tk.Label(
+        hp_frame,
+        text=item,
+        font=('Arial', 10, 'bold'),
+        bg='#ffffff',
+        fg='#002B5A',
+        width=26,
+        pady=6,
+        anchor='center').pack(pady=(0, 3))
+
+    # StringVar to hold the player's selection for this dropdown
+    var = tk.StringVar(value="Please select a definition...")
+    selected_answers[item] = var
+
+    # Dropdown populated with 1 correct and 5 random wrong answers
+    dropdown = ttk.Combobox(
+        quiz_frame,
+        textvariable=var,
+        style=style_name,
+        values=quiz.prepare_options_for_definition_dropdown(item),
+        state='readonly',
+        width=75,
+        height=50,
+        font=('Arial', 11))
+    dropdown.grid(row=i + 1, column=1, sticky='w', padx=(20, 0), pady=6)
+
+# Bottom row for back link and submit button
+bottom_row = tk.Frame(quiz_frame, bg='#002B5A')
+bottom_row.grid(row=16, column=0, columnspan=2, sticky='ew', pady=(15, 0))
+
+# Back to tutorial link
+back_to_tutorial = tk.Label(
+    bottom_row,
+    text="< Take me back to the tutorial",
+    font=('Arial', 11),
+    fg='#FFE500',
+    bg='#002B5A',
+    cursor='hand2',
+    justify='center')
+back_to_tutorial.pack(side='left')
+back_to_tutorial.bind('<Button-1>', lambda e: [
+    quiz_frame.pack_forget(),
+    tutorial_frame.pack(expand=True, fill='both', anchor='center')])
+back_to_tutorial.bind('<Enter>', lambda e: back_to_tutorial.config(fg='#ffffff'))
+back_to_tutorial.bind('<Leave>', lambda e: back_to_tutorial.config(fg='#FFE500'))
+
+def on_submit():
+    """
+    Handles the Submit button click on the quiz screen.
+    Calls is_complete to check all dropdowns have been answered, raising a ValueError and displaying an error messagebox if not.
+    If complete, records all matches via attempt_match and switches to the results screen.
+    """
+    try:
+        quiz.is_complete(selected_answers)
+        for item, var in selected_answers.items():
+            quiz.attempt_match(item, var.get())
+        show_results()
+    except ValueError as e:
+        messagebox.showerror("Incomplete Quiz", str(e))
+
+def on_submit_hover(e):
+    """
+    Changes the Submit button colour on hover.
+    """
+    submit_button.config(bg='#C7BB13')
+
+def on_submit_leave(e):
+    """
+    Resets the Submit button colour when mouse leaves.
+    """
+    submit_button.config(bg='#FFE500', fg='#000000')
+
+def on_submit_press(e):
+    """
+    Changes the Submit button colour on press.
+    """
+    submit_button.config(bg='#2F2A02', fg='#ffffff')
+
+# Submit button sits on the right of the bottom row
+submit_button = tk.Button(
+    bottom_row,
+    text="Submit",
+    font=('Arial', 14, 'bold'),
+    bg='#FFE500',
+    fg='#000000',
+    activebackground='#C7BB13',
+    relief='groove',
+    padx=10,
+    pady=4,
+    cursor='hand2',
+    command=on_submit)
+submit_button.pack(side='right')
+
+submit_button.bind('<Enter>', on_submit_hover)
+submit_button.bind('<Leave>', on_submit_leave)
+submit_button.bind('<ButtonPress-1>', on_submit_press)
 
 # ============================================================
 # RESULTS SCREEN
