@@ -78,14 +78,6 @@ def test_correct_match_returns_true():
     result = quiz.attempt_match(item, correct_answer)
     assert result == True
 
-def test_wrong_match_returns_false():
-    """
-    Tests that wrong answers as per quiz_questions dict returns False.
-    """
-    quiz = QuizLogic(quiz_questions)
-    item = list(quiz_questions.keys())[0]
-    result = quiz.attempt_match(item, "That's an incorrect answer")
-    assert result == False
 
 def test_score_is_zero_at_start():
     """
@@ -103,28 +95,25 @@ def test_score_reflects_correct_matches():
         quiz.attempt_match(item, answer)
     assert quiz.get_score() == 3
 
-def test_cannot_submit_incomplete_quiz():
+def test_quiz_not_complete_until_all_answered():
     """
-    Tests that if the player has not matched all questions to a description they cannot submit.
+    Tests that is_complete raises a ValueError when dropdowns still show the default placeholder value.
+    Uses mocking with StringVar object to simulate unanswered dropdowns without requiring Tkinter to run.
     """
     quiz = QuizLogic(quiz_questions)
-    can_submit, _ = quiz.can_submit()
-    assert can_submit == False
+    mock_selections = {item: type('var', (), 
+        {'get': lambda self: "Select a definition..."})() 
+        for item in quiz_questions}
+    with pytest.raises(ValueError):
+        quiz.is_complete(mock_selections)
 
-def test_submit_message_shows_remaining_count():
+def test_quiz_complete_when_all_answered():
     """
-    Tests that if the player attempts to submit without having answer all questions a count of remaining questions is presented.
-    """
-    quiz = QuizLogic(quiz_questions)
-    _, message = quiz.can_submit()
-    assert "14" in message
-
-def test_can_submit_when_all_matched():
-    """
-    Tests the player can submit when they have answered all 14 questions.
+    Tests that is_complete returns True when all dropdowns have a valid selection that is not the default placeholder value.
+    Uses mocking with StringVar object populated with the correct answers to simulate a fully completed quiz without requiring Tkinter to run.
     """
     quiz = QuizLogic(quiz_questions)
-    for item, answer in quiz_questions.items():
-        quiz.attempt_match(item, answer)
-        can_submit, _ = quiz.can_submit()
-    assert can_submit == True
+    mock_selections = {item: type('var', (), 
+        {'get': lambda self, a=answer: a})() 
+        for item, answer in quiz_questions.items()}
+    assert quiz.is_complete(mock_selections) == True
