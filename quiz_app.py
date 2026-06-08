@@ -469,7 +469,7 @@ def on_begin_press(e):
 # Lets Go button
 lets_begin_button = tk.Button(
     bottom_row,
-    text="Lets Go! 🚀",
+    text="Lets Begin! 🚀",
     font=('Courier New', 13, 'bold'),
     bg='#FFE500',
     fg='#000000',
