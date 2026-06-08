@@ -6,7 +6,7 @@ Contains two dictionaries:
 - tutorial_questions: 2 HP codes used in the tutorial screen to demonstrate how the matching quiz works before the player begins.
 """
 
-quiz_questions = { "HP_1 Explosive" : "Cause dangerous chemical reactions that can damage surroundings",
+quiz_questions = { "HP_1 Explosive" : "Causes dangerous chemical reactions that can damage surroundings",
                   "HP_2 Oxidizing" : "Provides oxygen, causing or contributing to the combustion of other materials",
                   "HP_3 Flammable" : "Easily ignites, inc. liquids with flashpoint below 60°C, flammable gases, or solid waste",
                   "HP_4 Irritant" :	"Causes skin irritation or damage to the eyes upon contact",
@@ -17,7 +17,7 @@ quiz_questions = { "HP_1 Explosive" : "Cause dangerous chemical reactions that c
                   "HP_9 Infectious" : "Contains microorganisms or toxins that can cause disease in humans or animals",
                   "HP_10 Toxic for Reproduction" : "May negatively affect reproductive health or harm offspring development",
                   "HP_11 Mutagenic" : "Causes permanent changes in genetic material",
-                  "HP_12 Produces toxic gases" : "Releases toxic gases when in contact with water or acids",
+                  "HP_12 Produces Toxic Gases" : "Releases toxic gases when in contact with water or acids",
                   "HP_13 Sensitising" : "Causes allergic reactions, affecting the skin or respiratory system",
                   "HP_14 Ecotoxic" : "Poses risks to the environment, potentially affecting ecosystems"}
 
