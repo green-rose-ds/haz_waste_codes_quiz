@@ -152,7 +152,7 @@ class QuizLogic:
         ValueError: If one or more dropdowns still show the default value.
      """
      unanswered_dropdowns = [item for item, var in selected_answers.items()
-                  if var.get() == "Select a definition..."]
+                  if var.get() == "Please select a definition..."]
      if unanswered_dropdowns:
         remaining_to_fill = len(unanswered_dropdowns)
         raise ValueError(
