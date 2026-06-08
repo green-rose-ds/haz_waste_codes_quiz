@@ -103,7 +103,7 @@ def test_quiz_not_complete_until_all_answered():
     """
     quiz = QuizLogic(quiz_questions)
     mock_selections = {item: type('var', (), 
-        {'get': lambda self: "Select a definition..."})() 
+        {'get': lambda self: "Please select a definition..."})() 
         for item in quiz_questions}
     with pytest.raises(ValueError):
         quiz.is_complete(mock_selections)
