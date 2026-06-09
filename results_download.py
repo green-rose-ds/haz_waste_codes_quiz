@@ -2,7 +2,7 @@ import csv
 import os
 
 """
-file_handler.py - Handles reading and writing of quiz results to a csv file.
+results_downloads.py - Handles reading and writing of quiz results to a csv file.
 
 Provides functions to save a player's name and score after completing the quiz, and to load all previous results from the csv file.
 """
@@ -32,3 +32,27 @@ def save_result(player_name, score, filepath=results_file):
             writer.writerow({'name': player_name, 'score': score})
     except IOError as e:
         raise IOError(f"Could not save result to file: {e}")
+
+def load_results(filepath= "quiz_results.csv"):
+    """
+    Reads all previous results from the CSV file.
+    Returns an empty list if the file does not exist.
+
+    Arguments:
+        filepath (str): Path to the csv file. Defaults to quiz_results.csv.
+
+    Returns:
+        list: A list of dictionaries, each with 'name' and 'score' keys.
+              Returns an empty list if the file does not exist.
+
+    Raises:
+        IOError: If the file exists but cannot be read.
+    """
+    try:
+        if not os.path.isfile(filepath):
+            return []
+        with open(filepath, 'r', newline='') as csvfile:
+            reader = csv.DictReader(csvfile)
+            return list(reader)
+    except IOError as e:
+        raise IOError(f"Could not load results from file: {e}")

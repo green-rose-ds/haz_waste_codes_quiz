@@ -143,7 +143,7 @@ class QuizLogic:
      Raises a ValueError if any dropdown still shows the default placeholder, indicating the player hasn't made a selection for every HP code.
 
      Arguments:
-        selected_answers (dict): Dictionary of {item: tk.StringVar} from the quiz screen dropdowns.
+        selected_answers (dict): Dictionary of item: tk.StringVar from the quiz screen dropdowns.
 
      Returns:
         bool: True if player has selected an answer in all dropdowns.
