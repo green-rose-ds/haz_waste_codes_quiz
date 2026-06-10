@@ -10,52 +10,71 @@ For staff working in Waste Regulation, or the waste industry in general, having 
 The proposed Minimum Viable Product (MVP) is a quiz application built in Python, designed to support developing familiarity with HP codes and their corresponding definitions. Presenting the codes in an interactive format provides an engaging, self-directed learning tool that reinforces understanding in a practical and fun way, supporting teams to maintain sounds knowledge of the codes.
 
 ## 2. Design Section
-### GUI Design
+### 2.1. GUI Design
 
-### Requirements
+### 2.2 Requirements
 
-**Functional Requirements**
+**2.2.1 Functional Requirements**
 
-| ID  | Requirement Specification                                                                                                                       |
-|-----|-------------------------------------------------------------------------------------------------------------------------------------------------|
-| F1  | The GUI will display a name entry screen before the quiz begins                                                                                 |
-| F2  | The app logic must validate the player's name, against the below criteria and display an appropriate error message if invalid:                  |
-| F2.1|  - Name cannot be blank                                                                                                                         |
-| F2.2|  - Name is between 2 and 20 characters                                                                                                          | 
-| F2.3|  - Name is made up of correct characters (letters and valid punctuation) only                                                                   |
-| F3  | The GUI will display the predefined 16 Hazardous Waste codes, and 16 corresponding descriptions, in two separate columns                        |
-| F4  | The app logic must shuffle the descriptions into a random order each time the quiz loads                                                        |
-| F5  | The GUI will allow the player to select one Hazardous Waste code in the left column, and one description in the right column, to create a match |
-| F6  | The GUI will visually connect the player's matched pairs with a line between them                                                               |
-| F7  | The GUI must allow the player to change a match before final submission                                                                         |
-| F8  | The app logic must check all 16 matches against the correct Hazardous Waste code descriptions upon submission                                   |
-| F9  | The GUI will display the player's results back to them, showing which of their matches were correct and incorrect                               |
-| F10 | The GUI will display the player's final score                                                                                                   |
-| F11 | The app logic must save the player's name and score to a persistent csv file following completion of the quiz                                   |
-| F12 | The app logic must append to the csv and not overwrite it so as to record and preserve all results                                              |
+| ID    | Requirement                                                                                                                                                           |
+|-------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| F1    | The GUI will display a welcome screen with a title and quiz description before the player begins                                                                      |
+| F2    | The app must require the player to enter their name before proceeding, displaying a popup error message if the name is invalid                                        |
+| F3    | The app must validate the player's name against the following criteria:                                                                                               |
+| F4    | The app must validate the player's name against the following criteria:                                                                                               |
+| F4.1  |  - The string cannot be empty                                                                                                                                         |
+| F4.1  |  - The name must be between 2 characters and 20 characters                                                                                                            |
+| F4.1  |  - The name cannot contain numbers or special characters other than hyphens                                                                                           |
+| F5    | The app must convert the player's validated name to title case before storing it                                                                                      |
+| F6    | The GUI will display a tutorial screen greeting the player by name, explaining the quiz format with static examples of two pre-completed HP code and definition pairs |
+| F7    | The GUI will provide a hyperlink to the GOV.UK Waste Classification Technical Guidance on the tutorial screen                                                         |
+| F8    | The GUI must allow the player to navigate back to the welcome screen from the tutorial screen                                                                         |
+| F9    | The GUI will display a quiz screen showing the remaining 14 HP codes on the left, each with a corresponding dropdown menu on the right                                |
+| F10   | Each dropdown shall contain 6 options consisting of the correct definition and 5 randomly selected incorrect definitions                                              |
+| F11   | The app must prevent the player from submitting the quiz until all 14 dropdowns have been answered, displaying an error messagebox if submission is attempted before  |
+| F12   | The app must calculate the player's score out of 14 total                                                                                                             |
+| F13   | The GUI will display a results screen showing:                                                                                                                        |
+| F14.1 |  - Player's score                                                                                                                                                     |
+| F14.2 |  - Each HP code                                                                                                                                                       | 
+| F14.3 |  - The players selected answer highlighted in green if correct or red if incorrect                                                                                    |
+| F14.4 |  - The correct answer for each question                                                                                                                               |
+| F15   | The app must save the player's name and score to a csv file on completion                                                                                             |
+| F16   | The app must append results to the csv file rather than overwriting it, preserving previous results                                                                   |
+| F17   | The app must allow the player to return to the welcome screen and play again after viewing their results                                                              |
+| F18   | The app must reset the quiz dropdowns if the player chooses to play again                                                                                             |
+| F19   | The app must be built using Python 3.9 or higher                                                                                           |
 
 
-**Non-functional Requirements**
+**2.2.2. Non-functional Requirements**
 
-| ID  | Requirement Specification                                                                                                                       |
-|-----|-------------------------------------------------------------------------------------------------------------------------------------------------|
-| F1  | The GUI will display a name entry screen before the quiz begins                                                                                 |
-| F2  | The app logic must validate the player's name, against the below criteria and display an appropriate error message if invalid:                  |
-| F2.1|  - Name cannot be blank                                                                                                                         |
-| F2.2|  - Name is between 2 and 20 characters                                                                                                          | 
-| F2.3|  - Name is made up of correct characters (letters and valid punctuation) only                                                                   |
-| F3  | The GUI will display the predefined 16 Hazardous Waste codes, and 16 corresponding descriptions, in two separate columns                        |
-| F4  | The app logic must shuffle the descriptions into a random order each time the quiz loads                                                        |
-| F5  | The GUI will allow the player to select one Hazardous Waste code in the left column, and one description in the right column, to create a match |
-| F6  | The GUI will visually connect the player's matched pairs with a line between them                                                               |
-| F7  | The GUI must allow the player to change a match before final submission                                                                         |
-| F8  | The app logic must check all 16 matches against the correct Hazardous Waste code descriptions upon submission                                   |
-| F9  | The GUI will display the player's results back to them, showing which of their matches were correct and incorrect                               |
-| F10 | The GUI will display the player's final score                                                                                                   |
-| F11 | The app logic must save the player's name and score to a persistent csv file following completion of the quiz                                   |
-| F12 | The app logic must append to the csv and not overwrite it so as to record and preserve all results                                              |
+| ID    | Requirement                                                                                                                                                                         |
+|-------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| F1    | The app shall validate all player input without crashing or raising unhandled exceptions, using try/except blocks for file operations and ValueError for incomplete quiz submission |
+| F2    | The quiz logic will be implemented as pure functions on the QuizLogic class in logic.py, completely independent of any Tkinter/GUI code                                             |
+| F3    | The name validation will be implemented as a pure function validate_name in quiz_logic.py that consistently returns the same output for the same input                              |
+| F4    | The code will include unit tests covering:                                                                                                                                          |
+| F4.1  |   - Data integrity                                                                                                                                                                  |
+| F4.2  |   - Name validation                                                                                                                                                                 |
+| F4.3  |   - Match logic                                                                                                                                                                     |
+| F4.4  |   - Scoring                                                                                                                                                                         |
+| F4.5  |   - Option generation                                                                                                                                                               |
+| F4.6  |   - Quiz completion checks                                                                                                                                                          |
+| F5    | The code will shall be structured across four separate files by operation:                                                                                                          |
+| F5.1  |   - Quiz_dictionary.py for data                                                                                                                                                     |
+| F5.2  |   - Quiz_logic.py for logic                                                                                                                                                         |
+| F5.3  |   - Results_download.py for csv handling                                                                                                                                            |
+| F5.4  |   - Quiz_app.py for the GUI                                                                                                                                                         |
+| F6    | All functions, classes and modules across all files are to include descriptive docstrings explaining their purpose, arguments, and return values                                    |
+| F7    | The csv file must persist between sessions on the local system, persisting through application restarts                                                                             |
+| F8    | The app will handle a missing or empty csv file gracefully, creating the file with a header row automatically                                                                       |
+| F9    | The app will present a consistent visual style across all screens using:                                                                                                            |
+| F9.1  | Navy background                                                                                                                                                                     |
+| F9.2  | White buttons with yellow accent borders to mirror a hazardous waste warning banner                                                                                                 |
+| F9.3  | Matching yellow interactive elements                                                                                                                                                |
+| F10   | The app shall run on a standard Python installation with Pillow and Pytest as external dependancy via a virtual environment                                                         |
 
-### Tech Stack Outline
+
+### 2.3. Tech Stack Outline
 **Languages**
 - Python
 - Github flavoured Markdown
@@ -76,7 +95,11 @@ The proposed Minimum Viable Product (MVP) is a quiz application built in Python,
 - VS Codes
 - Github
 
-### Code Design
+**Storage**
+- csv
+
+### 2.4 Code Design
+
 
 ## 3. Development Section
 
@@ -180,6 +203,9 @@ System requirements: Windows, Mac, or Linux with Python 3.14 installed with a vi
 
 **Running tests:**
 - python `-m pytest test_quiz_app.py`
+
+**Project structure:**
+
 
 ### 5.12 User Documentation
 
