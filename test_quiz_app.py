@@ -1,6 +1,7 @@
 import pytest
 from quiz_dictionary import quiz_questions, tutorial_questions
 from quiz_logic import validate_name, QuizLogic
+from results_download import save_result, load_results
 
 """
 Unit tests for quiz_logic.py — covers name validation, quiz matching,
@@ -118,3 +119,31 @@ def test_quiz_complete_when_all_answered():
         {'get': lambda self, a=answer: a})() 
         for item, answer in quiz_questions.items()}
     assert quiz.is_complete(mock_selections) == True
+
+def test_result_is_saved(tmp_path):
+    """
+    Tests that save_result creates a csv file to the specified filepath if one does not already exist.
+    """
+    filepath = tmp_path / "quiz_results.csv"
+    save_result("Rosie", 14, filepath)
+    assert filepath.exists()
+
+def test_saved_result_contains_correct_data(tmp_path):
+    """
+    Tests that the name and score written to the csv file match the values passed to save_result.
+    """
+    filepath = tmp_path / "quiz_results.csv"
+    save_result("Rosie", 14, filepath)
+    results = load_results(filepath)
+    assert results[0]["name"] == "Alice"
+    assert results[0]["score"] == "14"
+
+def test_results_append_not_overwrite(tmp_path):
+    """
+    Tests that calling save_result twice appends both results to the csv file rather than overwriting the first entry.
+    """
+    filepath = tmp_path / "results.csv"
+    save_result("Rosie", 14, filepath)
+    save_result("Matt", 12, filepath)
+    results = load_results(filepath)
+    assert len(results) == 2
