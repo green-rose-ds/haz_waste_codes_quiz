@@ -76,7 +76,7 @@ A quiz to match up the descriptions of Hazardous Waste codes to their descriptio
 
 The application is structured across four Python files: `quiz_dictionary.py` for data, `quiz_logic.py` for game logic, `results_download.py` for csv persistence, and `quiz_app.py` for the GUI. This separation ensures logic remains independently testable.
 
-**Data: `quiz_dictionary.py`**
+**Data: `quiz_dictionary.py`**/n
 Quiz content is stored in two dictionaries, `quiz_questions` contains the 14 HP codes used in the quiz, and `tutorial_questions` holds the remaining two codes used as static examples on the tutorial screen:
 
 ```
@@ -89,7 +89,7 @@ tutorial_questions = {
     "HP_POP": "Contains persistent organic pollutants above the concentration limit"}
 ```
 
-**Logic: `quiz_logic.py`**
+**Logic: `quiz_logic.py`**/n
 This file contains the standalone pure function `validate_name` and the QuizLogic class. By keeping all logic independent of Tkinter, this ensures every function is directly testable with pytest.
 The `validate_name` function strips spaces, converts to title case, and applies four validation rules, returning a (bool, str) tuple in all cases so the GUI can display whichever error message is relevant without:
 ```
@@ -103,7 +103,7 @@ def validate_name(name):
 ```
 `QuizLogic` manages all session states, within it the `prepare_options_for_definition_dropdown` method generates six answer options per HP code, which includes the correct definition plus five randomly sampled incorrect ones. The `is_complete` method checks whether any dropdowns still hold the default placeholder, raising a ValueError if so. The `get_results_summary` method returns a list of dictionaries containing each item, the player's answer, the correct answer, and a boolean for the results screen to consume.
 
-**Persistence: `results_download.py`**
+**Persistence: `results_download.py`**/n
 The 'save_result' function appends the player's name and score to a csv file, creating it with a header row on first run. The filepath parameter defaults to 'quiz_results.csv' but can be overridden for testing purposes:
 ```
 def save_result(player_name, score, filepath=RESULTS_FILE):
@@ -118,7 +118,7 @@ def save_result(player_name, score, filepath=RESULTS_FILE):
         raise IOError(f"Could not save result to file: {e}")
 ```
 
-**GUI: `quiz_app.py`**
+**GUI: `quiz_app.py`**/n
 The GUI is structured across four screens consisting of welcome, tutorial, quiz, and results. Each has a `tk.Frame` shown or hidden using `.pack()` and `.pack_forget()`. On the quiz screen, each HP code is displayed alongside a `ttk.Combobox` populated with six options from `prepare_options_for_definition_dropdown`, with each selection stored in a `tk.StringVar` in the `selected_answers` dictionary. On submission, `on_submit` calls `quiz.is_complete(selected_answers)` inside a `try/except` block. If it completes, it records all matches and navigates to the results screen and if not, it displays an error popup:
 ```
 def on_submit():
@@ -133,6 +133,25 @@ def on_submit():
 The results screen is rebuilt dynamically on each call to `show_results`, ensuring a second attempt always reflects the current session rather than the previous one.
 
 ## 4. Testing Section
+
+### 4.1.Testing methodology
+
+Two testing approaches are use, automated unit testing with Pytest for all pure functions with and manual testing for the GUI behaviour and player journey.
+Automated unit testing was prioritised for `quiz_logic.py`, `quiz_dictionary.py`, and `results_download.py` because these modules contain pure functions that take defined inputs and return consistent outputs, making them straightforward to test in isolation. Pytest was chosen as the testing framework due to its simple syntax and clear output. Test-driven development (TDD) was followed where possible, so tests were written before the corresponding functions, ensuring each function was designed with testability in mind from the outset.
+Manual testing was used for all GUI behaviour since Tkinter widgets cannot be instantiated in a test environment without a display. This covered navigation between screens, visual styling, dropdown behaviour, and error popups.
+
+**4.1.1. Manual Testing Outcomes**
+
+**4.1.2. Unit Testing Outcomes**
+17 unit tests were written across the testable modules, all of which pass successfully with the final version of the app.
+
+/../main/assets/images/unit_test_outcome.png
+
+Key test cases include validating that:
+- `validate_name` correctly rejects empty strings, numeric characters, and names outside the length bounds.
+- `prepare_options_for_definition_dropdown` always includes the correct answer, returns exactly 6 options, and contains no duplicates
+-  `is_complete` raises a ValueError when unanswered dropdowns are present.
+-  Tests for the csv file handler `results_download.py` use Pytest's built-in `tmp_path` to write to a temporary file, keeping the real `quiz_results.csv` unaffected during testing.
 
 
 ## 5. Documentation Section (User and Technical)
