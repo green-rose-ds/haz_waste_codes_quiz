@@ -60,8 +60,9 @@ A quiz to match up the descriptions of Hazardous Waste codes to their descriptio
 - Pytest
 - Random
 - webbrowser
-- re
+- regex
 - Pillow
+- os
   
 **Apps/Tools**
 - Figma
@@ -72,6 +73,64 @@ A quiz to match up the descriptions of Hazardous Waste codes to their descriptio
 ### Code Design
 
 ## 3. Development Section
+
+The application is structured across four Python files: `quiz_dictionary.py` for data, `quiz_logic.py` for game logic, `results_download.py` for csv persistence, and `quiz_app.py` for the GUI. This separation ensures logic remains independently testable.
+
+**Data: `quiz_dictionary.py`**
+Quiz content is stored in two dictionaries, `quiz_questions` contains the 14 HP codes used in the quiz, and `tutorial_questions` holds the remaining two codes used as static examples on the tutorial screen:
+
+```
+quiz_questions = {
+    "HP_1 Explosive": "Cause dangerous chemical reactions that can damage surroundings",
+    ...}
+
+tutorial_questions = {
+    "HP_15": "May show any of the hazardous properties, even if not initially present",
+    "HP_POP": "Contains persistent organic pollutants above the concentration limit"}
+```
+
+**Logic: `quiz_logic.py`**
+This file contains the standalone pure function `validate_name` and the QuizLogic class. By keeping all logic independent of Tkinter, this ensures every function is directly testable with pytest.
+The `validate_name` function strips spaces, converts to title case, and applies four validation rules, returning a (bool, str) tuple in all cases so the GUI can display whichever error message is relevant without:
+```
+def validate_name(name):
+    name = name.strip().title()
+    if len(name) == 0:
+        return False, "Player name cannot be empty"
+    if not re.fullmatch(r'[a-zA-Z\s\-]+', name):
+        return False, "Player name can only contain letters, hyphens, and spaces"
+    return True, name
+```
+`QuizLogic` manages all session states, within it the `prepare_options_for_definition_dropdown` method generates six answer options per HP code, which includes the correct definition plus five randomly sampled incorrect ones. The `is_complete` method checks whether any dropdowns still hold the default placeholder, raising a ValueError if so. The `get_results_summary` method returns a list of dictionaries containing each item, the player's answer, the correct answer, and a boolean for the results screen to consume.
+
+**Persistence: `results_download.py`**
+The 'save_result' function appends the player's name and score to a csv file, creating it with a header row on first run. The filepath parameter defaults to 'quiz_results.csv' but can be overridden for testing purposes:
+```
+def save_result(player_name, score, filepath=RESULTS_FILE):
+    try:
+        file_exists = os.path.isfile(filepath)
+        with open(filepath, 'a', newline='') as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames=['name', 'score'])
+            if not file_exists:
+                writer.writeheader()
+            writer.writerow({'name': player_name, 'score': score})
+    except IOError as e:
+        raise IOError(f"Could not save result to file: {e}")
+```
+
+**GUI: `quiz_app.py`**
+The GUI is structured across four screens consisting of welcome, tutorial, quiz, and results. Each has a `tk.Frame` shown or hidden using `.pack()` and `.pack_forget()`. On the quiz screen, each HP code is displayed alongside a `ttk.Combobox` populated with six options from `prepare_options_for_definition_dropdown`, with each selection stored in a `tk.StringVar` in the `selected_answers` dictionary. On submission, `on_submit` calls `quiz.is_complete(selected_answers)` inside a `try/except` block. If it completes, it records all matches and navigates to the results screen and if not, it displays an error popup:
+```
+def on_submit():
+    try:
+        quiz.is_complete(selected_answers)
+        for item, var in selected_answers.items():
+            quiz.attempt_match(item, var.get())
+        show_results()
+    except ValueError as e:
+        messagebox.showerror("Incomplete Quiz", str(e))
+```
+The results screen is rebuilt dynamically on each call to `show_results`, ensuring a second attempt always reflects the current session rather than the previous one.
 
 ## 4. Testing Section
 
