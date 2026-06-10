@@ -135,7 +135,7 @@ def test_saved_result_contains_correct_data(tmp_path):
     filepath = tmp_path / "quiz_results.csv"
     save_result("Rosie", 14, filepath)
     results = load_results(filepath)
-    assert results[0]["name"] == "Alice"
+    assert results[0]["name"] == "Rosie"
     assert results[0]["score"] == "14"
 
 def test_results_append_not_overwrite(tmp_path):
