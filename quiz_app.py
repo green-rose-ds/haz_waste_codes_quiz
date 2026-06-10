@@ -813,8 +813,8 @@ def build_results_screen():
             wraplength=290,
             justify='left',
             anchor='w',
-            padx=5).pack(side='left', 
-                         padx=(10, 0), 
+            padx=4).pack(side='left', 
+                         padx=(8, 0), 
                          expand=True, 
                          fill='both')
 
@@ -828,9 +828,11 @@ def build_results_screen():
     def on_play_again():
         """
         Resets the quiz and returns the player to the welcome screen.
-        Clears matched pairs and rebuilds the quiz frame for a fresh session.
-        """
+        Clears matched pairs and resets all dropdown selections so the quiz screen is clean for a new session.
+         """
         quiz.matched_pairs = {}
+        for var in selected_answers.values():
+            var.set("Please select a definition...")
         results_frame.pack_forget()
         welcome_frame.pack(expand=True, 
                            anchor='center')
@@ -843,7 +845,7 @@ def build_results_screen():
         fg='#120606',
         activebackground='#C7BB13',
         relief='groove',
-        padx=10,
+        padx=8,
         pady=8,
         cursor='hand2',
         command=on_play_again)
