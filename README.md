@@ -1,6 +1,6 @@
 # haz_waste_codes_quiz
 A quiz to match up the descriptions of Hazardous Waste codes to their description, built using Tkinter in Python for IFCS Summative 2
-
+<br>
 ## 1. Introduction
 My workplace of the Environment Agency (EA) is a non-departmental public body, who are responsible for protecting and improving the environment across England. One of its core functions is waste regulation, which involves ensuring that businesses and organisations handle, classify, and dispose of waste in accordance with legislation.
 
@@ -8,12 +8,11 @@ Hazardous waste classification is governed by the Hazardous Waste Regulations 20
 
 For staff working in Waste Regulation, or the waste industry in general, having a sound working knowledge of the HP code framework is beneficial. There is currently no dedicated interactive tool to support this, Typically, written guidance and on-the-job experience  is relied on for understand about HP codes.
 The proposed Minimum Viable Product (MVP) is a quiz application built in Python, designed to support developing familiarity with HP codes and their corresponding definitions. Presenting the codes in an interactive format provides an engaging, self-directed learning tool that reinforces understanding in a practical and fun way, supporting teams to maintain sounds knowledge of the codes.
-
+<br>
 ## 2. Design Section
 ### 2.1. GUI Design
 
 ### 2.2 Requirements
-<br>
 **2.2.1 Functional Requirements**
 
 | ID    | Requirement                                                                                                                                                           |
@@ -72,7 +71,7 @@ The proposed Minimum Viable Product (MVP) is a quiz application built in Python,
 | F9.2  | White buttons with yellow accent borders to mirror a hazardous waste warning banner                                                                                                 |
 | F9.3  | Matching yellow interactive elements                                                                                                                                                |
 | F10   | The app shall run on a standard Python installation with Pillow and Pytest as external dependancy via a virtual environment                                                         |
-
+<br>
 
 ### 2.3. Tech Stack Outline
 **Languages**
@@ -104,7 +103,7 @@ The proposed Minimum Viable Product (MVP) is a quiz application built in Python,
 ## 3. Development Section
 
 The application is structured across four Python files: `quiz_dictionary.py` for data, `quiz_logic.py` for game logic, `results_download.py` for csv persistence, and `quiz_app.py` for the GUI. This separation ensures logic remains independently testable.
-
+<br>
 **Data: `quiz_dictionary.py`**
 <br>
 The quiz content is stored in two dictionaries, `quiz_questions` contains the 14 HP codes used in the quiz, and `tutorial_questions` holds the remaining two codes used as static examples on the tutorial screen:
@@ -118,7 +117,7 @@ tutorial_questions = {
     "HP_15": "May show any of the hazardous properties, even if not initially present",
     "HP_POP": "Contains persistent organic pollutants above the concentration limit"}
 ```
-
+<br>
 **Logic: `quiz_logic.py`**
 <br>
 This file contains the standalone pure function `validate_name` and the `QuizLogic` class. By keeping all logic independent of Tkinter every function is directly testable with Pytest.
@@ -133,7 +132,7 @@ def validate_name(name):
     return True, name
 ```
 `QuizLogic` manages all session states, within it the `prepare_options_for_definition_dropdown` method generates six answer options per HP code, which includes the correct definition plus five randomly sampled incorrect ones. The `is_complete` method checks whether any dropdowns still hold the default placeholder, raising a ValueError if so. The `get_results_summary` method returns a list of dictionaries containing each item, the player's answer, the correct answer, and a boolean for the results screen to consume.
-
+<br>
 **Persistence: `results_download.py`**
 <br>
 The 'save_result' function appends the player's name and score to a csv file, creating it with a header row first time. The filepath parameter defaults to 'quiz_results.csv' but can be overridden for testing:
@@ -149,8 +148,9 @@ def save_result(player_name, score, filepath=RESULTS_FILE):
     except IOError as e:
         raise IOError(f"Could not save result to file: {e}")
 ```
-
-**GUI: `quiz_app.py`**/n
+<br>
+**GUI: `quiz_app.py`**
+<br>
 The GUI is structured across four screens consisting of welcome, tutorial, quiz, and results. Each has a `tk.Frame` shown or hidden using `.pack()` and `.pack_forget()`. On the quiz screen, each HP code is displayed alongside a `ttk.Combobox` populated with six options from `prepare_options_for_definition_dropdown`, with each selection stored in a `tk.StringVar` in the `selected_answers` dictionary. On submission, `on_submit` calls `quiz.is_complete(selected_answers)` inside a `try/except` block. If it completes, it records all matches and navigates to the results screen and if not, it displays an error messagebox:
 ```
 def on_submit():
@@ -163,7 +163,8 @@ def on_submit():
         messagebox.showerror("Incomplete Quiz", str(e))
 ```
 The results screen is refreshed on each call to `show_results`, ensuring a second attempt always reflects the current session rather than the previous one.
-
+<br>
+<br>
 ## 4. Testing Section
 
 ### 4.1.Testing methodology
@@ -171,7 +172,7 @@ The results screen is refreshed on each call to `show_results`, ensuring a secon
 Two testing approaches have been used, automated unit testing with Pytest for all pure functions and manual testing for the GUI behaviour and player journey.
 Automated unit testing was prioritised for `quiz_logic.py`, `quiz_dictionary.py`, and `results_download.py` because these modules contain pure functions that take defined inputs and return consistent outputs, making them straightforward to test in isolation. Pytest was chosen as the testing framework due to its simple syntax and output. Test-driven development (TDD) was followed where possible, so tests were written before their corresponding functions, ensuring each function was designed as testable from the outset.
 Manual testing was used for all GUI behaviour as Tkinter widgets cannot be instantiated in a test environment without a display. This covered navigation between screens, styling, dropdown behaviour, and error handling.
-
+<br>
 **4.1.1. Manual Testing Outcomes**
 |                    Test                   |                     Steps Followed                     |                                Expected result                                |                  Actual result                  | Outcome |   |
 |:-----------------------------------------:|:------------------------------------------------------:|:-----------------------------------------------------------------------------:|:-----------------------------------------------:|:-------:|---|
@@ -187,45 +188,64 @@ Manual testing was used for all GUI behaviour as Tkinter widgets cannot be insta
 | Results screening colouring functionality | Answer mix of correct and incorrect questions          | Player answers rows colour red/green to indicate correct/incorrect            | Colours displayed correctly                     | Pass    |   |
 | csv file creation                         | Complete quiz for first time                           | quiz_results.csv created with header and first row, name and score captured   | File created correctly                          | Pass    |   |
 | csv appending                             | Complete quiz                                          | Additional set of results present in csv file                                 | Both rows present, no overwrite                 | Pass    |   |
-| Play again                                | Click Play Again on results screen                     | Returns to welcome screen, quiz dropdowns reset                               | Returned to welcome, dropdowns reset            | Pass    |   |
-|                                           |                                                        |                                                                               |                                                 |         |   |
-
+| Play again                                | Click Play Again on results screen                     | Returns to welcome screen, quiz dropdowns reset                               | Returned to welcome, dropdowns reset            | Pass    |                              
+<br>
 **4.1.2. Unit Testing Outcomes**
 17 unit tests are written for the testable modules, all of which pass successfully with the final version of the app.
-
+<br>
 haz_waste_codes_quiz/main/images/unit_test_outcome.png
-
+<br>
 Key test cases include validating that:
 - `validate_name` correctly rejects empty strings, numeric characters, and names outside the length requirments.
 - `prepare_options_for_definition_dropdown` always includes the correct answer, returns exactly 6 options, and contains no duplicates
 -  `is_complete` raises a ValueError when unanswered dropdowns are present.
 -  Tests for the csv file handler `results_download.py` use Pytest's built-in `tmp_path` to write to a temporary file, keeping the real `quiz_results.csv` unaffected for testing.
-
+<br>
 
 ## 5. Documentation Section (User and Technical)
 
 ### 5.1. Technical Documentation
 System requirements: Windows, Mac, or Linux with Python 3.14 installed with a virtual environment activated.
-
+<br>
 **Starting the application:**
 1. Open a terminal and navigate to the project folder haz-waste-codes-quiz
 2. Once in the project folder, activate the virtual environment: 
 - Windows - `.venv\Scripts\activate`
 - Mac/Linux - `source .venv/bin/activate`
-   
+  <br> 
 **Run the application:**
  `python quiz_app.py`
-
+<br>
 **Installing dependencies:**
 - python `-m pip install Pillow`
 - python `-m pip install pytest`
-
+<br>
 **Running tests:**
 - python `-m pytest test_quiz_app.py`
-
+<br>
 **Project structure:**
-
-
+  
+|         File        |                          Purpose                          |
+|:-------------------:|:---------------------------------------------------------:|
+| quiz_dictionary.py  | Quiz and tutorial question dictionaries                   |
+| quiz_logic.py       | validate_name function and QuizLogic class                |
+| results_download.py | csv read and write functions                              |
+| quiz_app.py         | Tkinter GUI across four screens                           |
+| test_quiz_app.py    | Pytest unit tests                                         |
+| quiz_results.csv    | Persistent results storage, auto-created on first run     |
+| images/warning.png  | Hazardous waste warning image displayed on welcome screen |
+<br>
+The `QuizLogic` class is instantiated once in `quiz_app.py` as `quiz = QuizLogic(quiz_questions)` and its methods are called by each screen as the player progresses. All csv operations are wrapped in `try/except` blocks, so any `IOError` raised by `results_download.py` is caught in `quiz_app.py` and displayed as an error messagebox rather than crashing the app.
+<br>
+### 5.1. Technical Documentation
+**Playing the quiz:**
+- Enter your name in the Player Name entrybox on the welcome screen and click the Let's Go button. Names must be between 2 and 20 characters and contain only letters, hyphens, and spaces.
+- Read through the tutorial screen to understand the quiz format. Click the GOV.UK link if you would like to review the Waste Classification guidance before starting.
+- On the quiz screen, use the dropdown aligned against each HP code to select the definition you think matches it. Each dropdown shows 6 options with one correct and five incorrect.
+- Once you have answered all 14 dropdowns, click the Submit button. If you have left any dropdowns unanswered an error messagebox will appear indicating how many remain before you can progress.
+- The results screen will display your score and show each answer highlighted in green if correct or red if incorrect, alongside the correct definition for reference.
+- Click the Play Again button to retake the quiz.
+<br>
 ### 5.12 User Documentation
 
 
