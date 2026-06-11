@@ -13,7 +13,7 @@ The proposed Minimum Viable Product (MVP) is a quiz application built in Python,
 ### 2.1. GUI Design
 
 ### 2.2 Requirements
-
+<br>
 **2.2.1 Functional Requirements**
 
 | ID    | Requirement                                                                                                                                                           |
@@ -44,7 +44,7 @@ The proposed Minimum Viable Product (MVP) is a quiz application built in Python,
 | F18   | The app must reset the quiz dropdowns if the player chooses to play again                                                                                             |
 | F19   | The app must be built using Python 3.9 or higher                                                                                           |
 
-
+<br>
 **2.2.2. Non-functional Requirements**
 
 | ID    | Requirement                                                                                                                                                                         |
@@ -97,7 +97,7 @@ The proposed Minimum Viable Product (MVP) is a quiz application built in Python,
 
 **Storage**
 - csv
-
+<br>
 ### 2.4 Code Design
 
 
@@ -105,7 +105,8 @@ The proposed Minimum Viable Product (MVP) is a quiz application built in Python,
 
 The application is structured across four Python files: `quiz_dictionary.py` for data, `quiz_logic.py` for game logic, `results_download.py` for csv persistence, and `quiz_app.py` for the GUI. This separation ensures logic remains independently testable.
 
-**Data: `quiz_dictionary.py`**/n
+**Data: `quiz_dictionary.py`**
+<br>
 The quiz content is stored in two dictionaries, `quiz_questions` contains the 14 HP codes used in the quiz, and `tutorial_questions` holds the remaining two codes used as static examples on the tutorial screen:
 
 ```
@@ -118,7 +119,8 @@ tutorial_questions = {
     "HP_POP": "Contains persistent organic pollutants above the concentration limit"}
 ```
 
-**Logic: `quiz_logic.py`**/n
+**Logic: `quiz_logic.py`**
+<br>
 This file contains the standalone pure function `validate_name` and the `QuizLogic` class. By keeping all logic independent of Tkinter every function is directly testable with Pytest.
 The `validate_name` function strips spaces, converts to title case, and applies four validation rules, returning a (bool, str) tuple in all cases so the GUI can display whichever error message is relevant without:
 ```
@@ -132,7 +134,8 @@ def validate_name(name):
 ```
 `QuizLogic` manages all session states, within it the `prepare_options_for_definition_dropdown` method generates six answer options per HP code, which includes the correct definition plus five randomly sampled incorrect ones. The `is_complete` method checks whether any dropdowns still hold the default placeholder, raising a ValueError if so. The `get_results_summary` method returns a list of dictionaries containing each item, the player's answer, the correct answer, and a boolean for the results screen to consume.
 
-**Persistence: `results_download.py`**/n
+**Persistence: `results_download.py`**
+<br>
 The 'save_result' function appends the player's name and score to a csv file, creating it with a header row first time. The filepath parameter defaults to 'quiz_results.csv' but can be overridden for testing:
 ```
 def save_result(player_name, score, filepath=RESULTS_FILE):
@@ -165,16 +168,32 @@ The results screen is refreshed on each call to `show_results`, ensuring a secon
 
 ### 4.1.Testing methodology
 
-Two testing approaches are use, automated unit testing with Pytest for all pure functions with and manual testing for the GUI behaviour and player journey.
+Two testing approaches have been used, automated unit testing with Pytest for all pure functions and manual testing for the GUI behaviour and player journey.
 Automated unit testing was prioritised for `quiz_logic.py`, `quiz_dictionary.py`, and `results_download.py` because these modules contain pure functions that take defined inputs and return consistent outputs, making them straightforward to test in isolation. Pytest was chosen as the testing framework due to its simple syntax and output. Test-driven development (TDD) was followed where possible, so tests were written before their corresponding functions, ensuring each function was designed as testable from the outset.
 Manual testing was used for all GUI behaviour as Tkinter widgets cannot be instantiated in a test environment without a display. This covered navigation between screens, styling, dropdown behaviour, and error handling.
 
 **4.1.1. Manual Testing Outcomes**
+|                    Test                   |                     Steps Followed                     |                                Expected result                                |                  Actual result                  | Outcome |   |
+|:-----------------------------------------:|:------------------------------------------------------:|:-----------------------------------------------------------------------------:|:-----------------------------------------------:|:-------:|---|
+| Empty name submission                     | Leave player name field blank, click Let's Go button   | Error messagebox: "Player name cannot be empty"                               | Error messagebox displayed correctly            | Pass    |   |
+| Name with numbers                         | Enter "matt99" in player name field, click Let's Go    | Error messagebox: "Player name can only contain spaces, letters, and hyphens" | Error messagebox displayed correctly            | Pass    |   |
+| Valid name entry                          | Enter "rosie" in player name field, click Let's Go     | Proceeds to tutorial screen, with name presented in title case                | Navigated to tutorial screen                    | Pass    |   |
+| Hyphenated name                           | Enter "rose-anne" in player name field, click Let's Go | Proceeds, name shown as "Rose-Anne"                                           | Navigated correctly, name displayed as required | Pass    |   |
+| Tutorial back button                      | Click built in link back to welcome screen             | Returns to welcome screen                                                     | Returned correctly                              | Pass    |   |
+| GOV.UK guidance link                      | Click built in link on tutorial screen                 | Opens GOV.UK Waste Classification Technical Guidance page in browser          | Correct page opened in default browser          | Pass    |   |
+| Submit with incomplete dropdowns          | Leave 3 dropdowns unanswered, click Submit button      | Error messagebox showing count of 3 unanswered questions                      | Error messagebox displayed with correct count   | Pass    |   |
+| Submit with all dropdowns answered        | Answer all 14 dropdowns, click Submit button           | Navigates to results screen                                                   | Results screen displayed correctly              | Pass    |   |
+| Results screen accuracy                   | Answer mix of correct and incorrect questions          | Calculated results out of 14 are correct                                      | Results displayed correctly                     | Pass    |   |
+| Results screening colouring functionality | Answer mix of correct and incorrect questions          | Player answers rows colour red/green to indicate correct/incorrect            | Colours displayed correctly                     | Pass    |   |
+| csv file creation                         | Complete quiz for first time                           | quiz_results.csv created with header and first row, name and score captured   | File created correctly                          | Pass    |   |
+| csv appending                             | Complete quiz                                          | Additional set of results present in csv file                                 | Both rows present, no overwrite                 | Pass    |   |
+| Play again                                | Click Play Again on results screen                     | Returns to welcome screen, quiz dropdowns reset                               | Returned to welcome, dropdowns reset            | Pass    |   |
+|                                           |                                                        |                                                                               |                                                 |         |   |
 
 **4.1.2. Unit Testing Outcomes**
 17 unit tests are written for the testable modules, all of which pass successfully with the final version of the app.
 
-/haz_waste_codes_quiz/main/assets/images/unit_test_outcome.png
+haz_waste_codes_quiz/main/images/unit_test_outcome.png
 
 Key test cases include validating that:
 - `validate_name` correctly rejects empty strings, numeric characters, and names outside the length requirments.
